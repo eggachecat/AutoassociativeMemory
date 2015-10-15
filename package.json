@@ -1,0 +1,12 @@
+{
+	"name" : "NN-hw2",
+	"version" : "0.0.1",
+	"author": "Sun Ao, sunao_0626@hotmail.com",
+  	"license": "MIT",
+  	"description": "a homework for Neural Network",
+	"dependencies" : {
+		"angular" : ">= 1.2.0",
+		"mathjs": ">= 2.0.0",
+		"bootstrap": ">=3.3.5"
+	}
+}

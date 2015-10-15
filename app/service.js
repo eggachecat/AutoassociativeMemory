@@ -1,0 +1,3 @@
+app.service('drawService', [function () {
+	
+}])

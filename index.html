@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html ng-app="HebbianApp">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>HomeWork For Neural Network</title>
+		<script src="node_modules/angular/angular.js"></script>
+		<script src="node_modules/mathjs/dist/math.js"></script>
+		<script src="app/matrix.js"></script>
+		<script src="app/app.js"></script>
+		<script src="app/service.js"></script>
+		<script src="app/controller.js"></script>
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+		<style type="text/css">
+			body{
+				background-color: #E9EAED;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			.teacher-area {
+				display: block;
+				height: auto;
+				float: none;
+				margin-bottom: 10px;
+			}
+			h1 {
+				position: relative;
+			}
+			table{
+				float: left;
+				/*margin-left:30px;
+				margin-bottom:30px;*/
+				width:10%;
+				/*background-color: #E9EAED;*/
+			}
+			.block{
+				height: 20px;
+				width: 20px;
+				border-color: #E9EAED;
+				border-width: 1px;
+				border-style: solid;
+				float: left;
+			}
+			.forecast-area table{
+				float: left;
+				width: 200px;
+			}
+			.forecast-area .block{
+				height: 30px;
+				width: 30px;
+				border-color: #E9EAED;
+				border-width: 1px;
+				border-style: solid;
+				float: left;
+			}
+			.forecast-area{
+				margin-top: 10px;
+				padding-left: 400px;
+				height: 300px;
+			}
+			.glyphicon-refresh-animate {
+			    -animation: spin .7s infinite linear;
+			    -webkit-animation: spin2 .7s infinite linear;
+			}
+
+			@-webkit-keyframes spin2 {
+			    from { -webkit-transform: rotate(0deg);}
+			    to { -webkit-transform: rotate(360deg);}
+			}
+
+			@keyframes spin {
+			    from { transform: scale(1) rotate(0deg);}
+			    to { transform: scale(1) rotate(360deg);}
+			}
+			.blackBlock{background-color:black;}
+			.whiteBlock{
+				background-color: white;
+			}
+		</style>
+	</head>
+	<body ng-controller="LearningController as learnCtrl">
+			<h1 class="text-center">訓練專區</h1>
+			<div class="teacher-area">
+				<table ng-repeat="teacher in learnCtrl.teacherMatrixs">
+					<caption>
+						<span>圖像的值是:</span> 
+						<input type="text" placeholder="??" size="2" ng-model="teacher.value">
+						<button type="button" class="btn btn-danger btn-xs" ng-click="learnCtrl.deleteTeacher(teacher)">刪除此訓練樣本输入</button>
+					</caption>
+
+					<tbody>
+						<tr ng-repeat="(rowNum, rowVec) in teacher.matrix._data">
+							<td class="block" 
+								 ng-class="{'false':'blackBlock','true':'whiteBlock'}[item < 0]"
+								 ng-repeat="(colNum, item) in rowVec track by $index"
+								 ng-click="teacher.matrix._data[rowNum][colNum] = 1 -teacher.matrix._data[rowNum][colNum] ">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<button type="button" class="btn btn-primary btn-lg" 
+						style="height:180px;margin-top:10px;"
+				        ng-click="learnCtrl.addTeacher()">
+				        新增訓練樣本
+		        </button>
+				<button type="button" class="btn btn-success btn-lg" 
+						style="height:180px;margin-top:10px;"
+						ng-click="learnCtrl.startTraining()">
+						<span ng-show="!learnCtrl.trained && !learnCtrl.training">开始訓練</span>
+						<span ng-show="learnCtrl.training">正在訓練</span>
+						<span ng-show="!learnCtrl.training && learnCtrl.trained">重新訓練</span>
+						<span ng-show="learnCtrl.training" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">
+				</button>
+			</div>
+			<h1 class="text-center">測試專區</h1>
+
+			<div class="forecast-area">
+		 		<table>
+					<tbody>
+						<tr ng-repeat="(rowNum, rowVec) in learnCtrl.matrixToForecast._data">
+							<td class="block" 
+								 ng-class="{'false':'blackBlock','true':'whiteBlock'}[item < 0]"
+								 ng-repeat="(colNum, item) in rowVec track by $index"
+								 ng-click="learnCtrl.matrixToForecast._data[rowNum][colNum] = 1 - learnCtrl.matrixToForecast._data[rowNum][colNum] ">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="float:left;width:140px;margin-right:50px;">
+					<button class="btn btn-success btn-lg" 
+							ng-click="learnCtrl.forecast()"
+							style="margin-top:30px;float:left;"
+							ng-disabled="!learnCtrl.trained">
+							预测 ====>
+					</button>
+					<button class="btn btn-danger btn-xs" 
+						    style="float:left;margin-left:30px;margin-top:5px;" 
+						    ng-click="learnCtrl.deleteTeacher(teacher)"
+						    ng-hide="learnCtrl.trained">
+						    請先訓練
+				    </button>
+				</div>
+				<table>
+					<tbody>
+						<tr ng-repeat="(rowNum, rowVec) in learnCtrl.resultMatrix._data">
+							<td class="block" 
+								 ng-class="{'false':'blackBlock','true':'whiteBlock'}[item < 0]"
+								 ng-repeat="(colNum, item) in rowVec track by $index">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+	</body>
+</html>
