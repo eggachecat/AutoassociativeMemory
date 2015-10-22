@@ -72,6 +72,8 @@ app.controller('LearningController',function ($timeout) {
 		}
 	}
 	this.startTraining = function(){
+		p = []; p_t = [];
+		self.weight = math.zeros(size,size);
 		self.training = true;
 		angular.forEach(self.teacherMatrixs,function(t){
 			p = matrixToInput(t.matrix);
